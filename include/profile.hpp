@@ -9,7 +9,7 @@ enum class EventType {
     SwitchLayer,
 };
 
-template<size_t eventCount_>
+template<size_t layerSize_>
 class Profile {
 
     struct Event {
@@ -22,9 +22,8 @@ class Profile {
 
     public:
 
-    template<size_t size_>
     class Layer {
-        Event events_[size_]; // Layer represented as arrays of events
+        Event events_[layerSize_]; // Layer represented as arrays of events
         size_t usedEvents_;   // Number of events in use   
 
         public:
@@ -54,8 +53,8 @@ class Profile {
 
 
     size_t layerCount_;          // Number of layers in profile
-    std::vector<Layer<eventCount_>*> layers_; // vector used to store layers in profile
-    Layer<eventCount_>* workingLayer_;        // Current operating layer
+    std::vector<Layer<layerSize_>*> layers_; // vector used to store layers in profile
+    Layer<layerSize_>* workingLayer_;        // Current operating layer
 
     public:
 
