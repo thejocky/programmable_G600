@@ -4,9 +4,11 @@
 
 
 enum class EventType {
-    NoEvent,
-    ExecuteCommand,
-    SwitchLayer,
+    EmptyEvent = 0, // No event in layer, fall to and execute next layer
+    NoEvent,        // No event in layer, don't execute anything
+    ExecuteCommand, // Execute shell command
+    SwitchLayer,    // Switch to new layer
+    PushOverlay,    // Add overlay to execution list
 };
 
 template<size_t layerSize_>
