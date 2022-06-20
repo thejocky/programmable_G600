@@ -31,7 +31,7 @@ class Profile {
 
         public:
 
-        Layer(size_t size);
+        Layer();
         ~Layer() {}
         
         size_t size() {return layerSize_;}
@@ -61,7 +61,7 @@ class Profile {
 
     public:
 
-    Profile(size_t eventCount);
+    Profile();
     ~Profile();
 
 
