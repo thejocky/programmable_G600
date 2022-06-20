@@ -43,7 +43,7 @@ class Profile {
         // After appending event size_-1 no further events will be added,
         // use set and delete event to modify layer further
         bool appendEvent(const char* event, EventType type);
-        bool appendEvent(Layer* event, EventType type);
+        bool appendEvent(Layer* layer, EventType type);
 
 
         protected:
