@@ -39,8 +39,9 @@ class Profile {
         bool deleteEvent(size_t n);
         EventType eventNType(size_t n);
 
-        // Used in creating layer. Will add events starting from 0 going  to size_-1
-        // After reaching appending event size_-1, use set and delete event to modify layer further
+        // Used in creating layer. Will add events starting from 0 going to size_-1
+        // After appending event size_-1 no further events will be added,
+        // use set and delete event to modify layer further
         bool appendEvent(const char* event, EventType type);
         bool appendEvent(Layer* event, EventType type);
 
