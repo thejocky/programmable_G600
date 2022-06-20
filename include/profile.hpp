@@ -37,7 +37,6 @@ class Profile {
         size_t size() {return layerSize_;}
         EventType setEvent(size_t n, const char* event, EventType type);
         EventType setEvent(size_t n, Layer* layer, EventType type);
-        EventType deleteEvent(size_t n);
         EventType eventNType(size_t n);
 
         // Used in creating layer. Will add events starting from 0 going to size_-1
