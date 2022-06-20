@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdexcept>
 #include <vector>
+#include <exception>
 
 
 enum class EventType {
@@ -35,7 +36,7 @@ class Profile {
         
         size_t size() {return layerSize_;}
         EventType setEvent(size_t n, const char* event, EventType type);
-        EventType setEvent(size_t n, Layer*, EventType type);
+        EventType setEvent(size_t n, Layer* layer, EventType type);
         bool deleteEvent(size_t n);
         EventType eventNType(size_t n);
 
