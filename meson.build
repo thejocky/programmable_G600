@@ -6,7 +6,7 @@ project('programmable_g600', 'cpp',
 
 incdir = include_directories('include')
 
-src_files = []
+src_files = ['source/profile.cpp']
 
 exe = executable('programmable_g600', src_files,
   install : true, include_directories : incdir)

@@ -7,7 +7,7 @@
 template<size_t layerSize_>
 Profile<layerSize_>::Layer::Layer() :
     events_({}),
-    usedEvents_(0),
+    usedEvents_(0)
 {}
 
 template<size_t layerSize_>
@@ -28,7 +28,7 @@ setEvent(size_t n, Layer* layer, EventType type) {
 
 template<size_t layerSize_>
 EventType Profile<layerSize_>::Layer::eventNType(size_t n) {
-    return events[n].type;
+    return events_[n].type;
 }
 
 
@@ -56,15 +56,20 @@ appendEvent(Layer* layer, EventType type) {
 
 template<size_t layerSize_>
 Profile<layerSize_>::Profile() :
-    layerCount_(0),
-    workingLayer_(nullptr),
+    first_(nullptr),
+    last_(nullptr)
 {}
 
 template<size_t layerSize_>
 Profile<layerSize_>::~Profile() {
-    for (auto layer : layers_) {
-        delete layer;
+    // Pop and delete first element of linkedlist until empty
+    Link* tmp;
+    while (first_) {
+        tmp = first_;
+        first_ = first_->next;
+        delete tmp;
     }
+    last_ = nullptr;
 }
 
 template<size_t layerSize_>
@@ -78,40 +83,52 @@ int Profile<layerSize_>::spawnCommand(const char* cmd) {
 }
 
 template<size_t layerSize_>
-void Profile<layerSize_>::setLayer(Layer* layer) {
+void Profile<layerSize_>::forwardLayer(Link* layer) {
 
+    // If already at front do nothing and return
+    if (layer = first_) return;
+
+    // Break layer out of list
+    layer->back->next = layer->next;
+    if (layer->next)
+        layer->next->back = layer->back;
+
+    // Push to begining of list
+    layer->next = first_;
+    layer->back = nullptr;
+    first_->back = layer;
+    first_ = layer;
 }
 
 template<size_t layerSize_>
-void Profile<layerSize_>::addOverlay(Layer* later) {
+int Profile<layerSize_>::executeEvent(size_t n, Link* layer) {
 
-}
+    if (!layer) return 0;
+    if (layer->data.event(n).type == EventType::EmptyEvent)
+        return executeEvent(n, layer);
 
-template<size_t layerSize_>
-int Profile<layerSize_>::executeEvent(size_t n) {
-    switch(workingLayer_->event(n).type) {
+    switch(layer->data.event(n).type) {
         case EventType::ExecuteCommand:
-            executeEvent(workingLayer_->event(n).event.command);
+            executeEvent(layer->data.event(n).event.command);
             break;
         
         case EventType::SpawnCommand:
-            spawnCommand(workingLayer_->event(n).event.command);
+            spawnCommand(layer->data.event(n).event.command);
             break;
 
-        case EventType::SwitchLayer:
-            setLayer(workingLayer_->event(n).event.layer);
+        case EventType::ForwardLayer:
+            forwardLayer(layer->data.event(n).event.layer);
             break;
         
-        case EventType::PushOverlay:
-            addOverlay(workingLayer_->event(n).event.layer);
-            break;
-        
-        default: break:
+        default: break;
     }
     return 0;
 }
 
 template<size_t layerSize_>
-void Profile<layerSize_>::appendLayer(Layer* layer) {
-    layers.push_back(new Layer());
+void Profile<layerSize_>::appendLayer(Link* layer) {
+    layer->back = nullptr;
+    layer->next = first_;
+    first_->back = layer;
+    first_ = layer;
 }

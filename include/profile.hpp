@@ -8,19 +8,27 @@ enum class EventType {
     EmptyEvent = 0, // No event in layer, fall to and execute next layer
     NoEvent,        // No event in layer, don't execute anything
     ExecuteCommand, // Execute shell command
-    SwitchLayer,    // Switch to new layer
-    PushOverlay,    // Add overlay to execution list
+    SpawnCommand,   // Execute shell command then break from command
+    ForwardLayer,   // Move layer to front of execution stack
 };
 
 template<size_t layerSize_>
 class Profile {
 
+    // Forward declair Event Layer and Link types
+    struct Event;
+    public:
+    class Layer;
+    struct Link;
+
+    private:
+
     struct Event {
         union EventUnion {
             char* command;
-            Event* layer;
+            Link* layer;
         } event;
-        eventType type;
+        EventType type;
     };
 
     public:
@@ -52,26 +60,46 @@ class Profile {
 
     };
 
+    // link structure used to store layers in linked list
+    struct Link {
+        Link* back;
+        Layer data;
+        Link* next;
+    };
+
     private:
 
 
-    size_t layerCount_;          // Number of layers in profile
-    std::vector<Layer<layerSize_>*> layers_; // vector used to store layers in profile
-    Layer<layerSize_>* workingLayer_;        // Current operating layer
+    // Execution list
+    // In case of execution, first layer with filled event will be executed
+    Link* first_;
+    Link* last_; 
+
 
     public:
 
     Profile();
     ~Profile();
 
+    private:
 
+    // Execute given shell command
     int executeCommand(const char* cmd);
+    // Execute given shell command then break from it
     int spawnCommand(const char* cmd);
-    void setLayer(Layer* layer);
-    void addOverlay(Layer* later);
+    // Move Layer to front of execution list
+    void forwardLayer(Link* layer);
 
-    int executeEvent(size_t n);
+    // Starting from layer crawl throuhg list untill event reached
+    int executeEvent(size_t event, Link* layer);
 
-    void appendLayer(Layer* layer);
+    public:
+
+    int executeEvent(size_t event) {
+        return executeEvent(event, first_);
+    }
+
+    // push layer link to internal execution list
+    void appendLayer(Link* layer);
 
 };
