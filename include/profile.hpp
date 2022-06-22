@@ -1,7 +1,10 @@
+#pragma once
+
 #include <stdlib.h>
 #include <stdexcept>
 #include <vector>
 #include <exception>
+#include <iostream>
 
 
 enum class EventType {
@@ -25,7 +28,7 @@ class Profile {
 
     struct Event {
         union EventUnion {
-            char* command;
+            const char* command;
             Link* layer;
         } event;
         EventType type;
@@ -58,6 +61,7 @@ class Profile {
 
         Event event(size_t n) {return events_[n];}
 
+        friend Profile;
     };
 
     // link structure used to store layers in linked list
@@ -101,7 +105,11 @@ class Profile {
 
     // push layer link to internal execution list
     void appendLayer(Link* layer);
-
-    bool compair(size_t layerCount, size_t layerSize, Event**);
+  
+    // For testing purposes
+    // pushes to stream the current state of profile in zzz format
+    void logProfile(std::ostream &stream);
 
 };
+
+
