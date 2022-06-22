@@ -51,7 +51,7 @@ class Profile {
         // After appending event size_-1 no further events will be added,
         // use set and delete event to modify layer further
         bool appendEvent(const char* event, EventType type);
-        bool appendEvent(Layer* layer, EventType type);
+        bool appendEvent(Link* layer, EventType type);
 
 
         protected:
@@ -101,5 +101,7 @@ class Profile {
 
     // push layer link to internal execution list
     void appendLayer(Link* layer);
+
+    bool compair(size_t layerCount, size_t layerSize, Event**);
 
 };
