@@ -15,74 +15,136 @@ enum class EventType {
     ForwardLayer,   // Move layer to front of execution stack
 };
 
-template<size_t layerSize_>
-class Profile {
 
-    // Forward declair Event Layer and Link types
-    struct Event;
-    public:
-    class Layer;
-    struct Link;
+// // Forward declair Event Layer Profile and Link types
+// struct Event;
+// class Layer;
+// struct Link;
+class Profile;
 
-    private:
+
+
+
+
+// class Layer {
+
+//     struct Event {
+//         union EventUnion {
+//             const char* command;
+//             Link* layer;
+//         } event;
+//         EventType type;
+//     };
+
+//     size_t usedEvents_; // Number of events in use
+//     size_t layerSize_;  // Number of events in layer
+//     Event events_[];    // Layer represented as arrays of events
+
+//     public:
+
+//     Layer() = delete;
+//     ~Layer() {}
+
+//     size_t size() {return layerSize_;}
+//     EventType setEvent(size_t n, const char* event, EventType type);
+//     EventType setEvent(size_t n, Layer* layer, EventType type);
+//     EventType eventNType(size_t n);
+
+//     // Used in creating layer. Will add events starting from 0 going to size_-1
+//     // After appending event size_-1 no further events will be added,
+//     // use set and delete event to modify layer further
+//     bool appendEvent(const char* event, EventType type);
+//     bool appendEvent(Link* layer, EventType type);
+
+
+//     protected:
+
+//     Event event(size_t n) {return events_[n];}
+
+//     friend Profile;
+// };
+
+// // link structure used to store layers in linked list
+// struct Link {
+//     Link* back;
+//     Link* next;
+//     Layer data;
+// };
+
+// class Link {
+//     Link* back_;
+//     Link* next_;
+//     Layer data_;
+
+//     public:
+
+//     Link() = delete;
+//     static Link* generateLink(size_t layerSize);
+
+//     Link* back() {return back_;}
+//     Link* next() {return next_;}
+//     Layer& data() {return data_;}
+
+
+
+// };
+
+
+class LayerLink {
 
     struct Event {
         union EventUnion {
             const char* command;
-            Link* layer;
+            LayerLink* layer;
         } event;
         EventType type;
     };
 
+    LayerLink* back_;
+    LayerLink* next_;
+    size_t usedEvents_; // Number of events in use
+    size_t layerSize_;  // Number of events in layer
+    Event events_[];    // Layer represented as arrays of events
+
     public:
 
-    class Layer {
-        Event events_[layerSize_]; // Layer represented as arrays of events
-        size_t usedEvents_;   // Number of events in use   
+    LayerLink() = delete;
+    ~LayerLink() {}
 
-        public:
+    static LayerLink* generateLayerLink(size_t layerSize);
 
-        Layer();
-        ~Layer() {}
-        
-        size_t size() {return layerSize_;}
-        EventType setEvent(size_t n, const char* event, EventType type);
-        EventType setEvent(size_t n, Layer* layer, EventType type);
-        EventType eventNType(size_t n);
+    LayerLink* next() {return next_;}
+    LayerLink* back() {return back_;}
+    size_t size() {return layerSize_;}
 
-        // Used in creating layer. Will add events starting from 0 going to size_-1
-        // After appending event size_-1 no further events will be added,
-        // use set and delete event to modify layer further
-        bool appendEvent(const char* event, EventType type);
-        bool appendEvent(Link* layer, EventType type);
+    void setNext(LayerLink* next) {next_ = next;}
+    void setBack(LayerLink* back) {back_ = back;}
+    EventType setEvent(size_t n, const char* event, EventType type);
+    EventType setEvent(size_t n, LayerLink* layer, EventType type);
+    EventType eventNType(size_t n);
 
 
-        protected:
+    protected:
 
-        Event event(size_t n) {return events_[n];}
+    Event event(size_t n) {return events_[n];}
 
-        friend Profile;
-    };
+    friend Profile;
+};
 
-    // link structure used to store layers in linked list
-    struct Link {
-        Link* back;
-        Layer data;
-        Link* next;
-    };
 
-    private:
+
+class Profile {
 
 
     // Execution list
     // In case of execution, first layer with filled event will be executed
-    Link* first_;
-    Link* last_; 
+    LayerLink* first_;
+    LayerLink* last_; 
 
 
     public:
 
-    Profile();
+    Profile(size_t layerSize);
     ~Profile();
 
     private:
@@ -92,10 +154,10 @@ class Profile {
     // Execute given shell command then break from it
     int spawnCommand(const char* cmd);
     // Move Layer to front of execution list
-    void forwardLayer(Link* layer);
+    void forwardLayer(LayerLink* layer);
 
     // Starting from layer crawl throuhg list untill event reached
-    int executeEvent(size_t event, Link* layer);
+    int executeEvent(size_t event, LayerLink* layer);
 
     public:
 
@@ -104,7 +166,7 @@ class Profile {
     }
 
     // push layer link to internal execution list
-    void appendLayer(Link* layer);
+    void appendLayer(LayerLink* layer);
   
     // For testing purposes
     // pushes to stream the current state of profile in zzz format
