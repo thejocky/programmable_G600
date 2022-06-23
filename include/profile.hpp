@@ -16,78 +16,11 @@ enum class EventType {
 };
 
 
-// // Forward declair Event Layer Profile and Link types
-// struct Event;
-// class Layer;
-// struct Link;
+// Forward declair LayerLink and Profile classes
+class LayerLink;
 class Profile;
 
 
-
-
-
-// class Layer {
-
-//     struct Event {
-//         union EventUnion {
-//             const char* command;
-//             Link* layer;
-//         } event;
-//         EventType type;
-//     };
-
-//     size_t usedEvents_; // Number of events in use
-//     size_t layerSize_;  // Number of events in layer
-//     Event events_[];    // Layer represented as arrays of events
-
-//     public:
-
-//     Layer() = delete;
-//     ~Layer() {}
-
-//     size_t size() {return layerSize_;}
-//     EventType setEvent(size_t n, const char* event, EventType type);
-//     EventType setEvent(size_t n, Layer* layer, EventType type);
-//     EventType eventNType(size_t n);
-
-//     // Used in creating layer. Will add events starting from 0 going to size_-1
-//     // After appending event size_-1 no further events will be added,
-//     // use set and delete event to modify layer further
-//     bool appendEvent(const char* event, EventType type);
-//     bool appendEvent(Link* layer, EventType type);
-
-
-//     protected:
-
-//     Event event(size_t n) {return events_[n];}
-
-//     friend Profile;
-// };
-
-// // link structure used to store layers in linked list
-// struct Link {
-//     Link* back;
-//     Link* next;
-//     Layer data;
-// };
-
-// class Link {
-//     Link* back_;
-//     Link* next_;
-//     Layer data_;
-
-//     public:
-
-//     Link() = delete;
-//     static Link* generateLink(size_t layerSize);
-
-//     Link* back() {return back_;}
-//     Link* next() {return next_;}
-//     Layer& data() {return data_;}
-
-
-
-// };
 
 
 class LayerLink {
