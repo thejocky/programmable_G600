@@ -78,7 +78,7 @@ Profile<layerSize_>::~Profile() {
 
 template<size_t layerSize_>
 int Profile<layerSize_>::executeCommand(const char* cmd) {
-    return 1;
+    return system(cmd);
 }
 
 template<size_t layerSize_>
