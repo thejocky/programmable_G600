@@ -56,6 +56,10 @@ class LayerLink {
     EventType setEvent(size_t n, LayerLink* layer, EventType type);
     EventType eventNType(size_t n);
 
+    private:
+
+    void setSize(size_t size) {layerSize_ = size;}
+
 
     protected:
 
@@ -77,7 +81,7 @@ class Profile {
 
     public:
 
-    Profile(size_t layerSize);
+    Profile();
     ~Profile();
 
     private:
