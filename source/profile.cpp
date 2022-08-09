@@ -147,35 +147,35 @@ void Profile::logProfile(std::ostream &stream) {
 
 
 
-int main() {
+// int main() {
 
-    Profile profile;
-    LayerLink* layer1 = LayerLink::generateLayerLink(4);
-    LayerLink* layer2 = LayerLink::generateLayerLink(4);
+//     Profile profile;
+//     LayerLink* layer1 = LayerLink::generateLayerLink(4);
+//     LayerLink* layer2 = LayerLink::generateLayerLink(4);
 
-    profile.logProfile(std::cout);
-    std::cout << '\n';
+//     profile.logProfile(std::cout);
+//     std::cout << '\n';
 
-    layer1->setEvent(0, "test1", EventType::SpawnCommand);
-    layer1->setEvent(1, "data doesn't matter", EventType::NoEvent);
-    layer1->setEvent(2, layer2, EventType::ForwardLayer);
+//     layer1->setEvent(0, "test1", EventType::SpawnCommand);
+//     layer1->setEvent(1, "data doesn't matter", EventType::NoEvent);
+//     layer1->setEvent(2, layer2, EventType::ForwardLayer);
 
-    layer2->setEvent(0, layer1, EventType::ForwardLayer);
-    layer2->setEvent(1, "echo Command Execution Success!", EventType::ExecuteCommand); 
+//     layer2->setEvent(0, layer1, EventType::ForwardLayer);
+//     layer2->setEvent(1, "echo Command Execution Success!", EventType::ExecuteCommand); 
     
 
-    profile.appendLayer(layer1);
-    profile.appendLayer(layer2);
+//     profile.appendLayer(layer1);
+//     profile.appendLayer(layer2);
 
-    profile.logProfile(std::cout);
-    std::cout << '\n';
+//     profile.logProfile(std::cout);
+//     std::cout << '\n';
 
-    profile.executeEvent(0);
+//     profile.executeEvent(0);
 
-    profile.logProfile(std::cout);
-    std::cout << '\n';
+//     profile.logProfile(std::cout);
+//     std::cout << '\n';
 
-    return 0;
-}
+//     return 0;
+// }
 
 

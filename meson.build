@@ -6,9 +6,12 @@ project('programmable_g600', 'cpp',
 
 incdir = include_directories('include')
 
-src_files = ['source/profile.cpp']
+src_files = ['source/profile.cpp', 'source/device.cpp', 'source/main.cpp']
+
+zzz = dependency('zzzlib', version : '>=1.0.0')
 
 exe = executable('programmable_g600', src_files,
-  install : true, include_directories : incdir)
+  install : true, include_directories : incdir,
+  dependencies : zzz)
 
 
