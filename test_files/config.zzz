@@ -1,0 +1,33 @@
+
+
+initialProfile:
+  exampleProfile
+
+Devices:
+  
+  G600_kbd:
+
+    # Use either ID or Name to specify device, not both
+
+    # Specific to individual device
+    # ID: usb-Logitech_Gaming_Mouse_G600_A660D9B71EF20017-if01-event-kbd
+
+    # Specific to one model of device
+    Name: Logitech Gaming Mouse G600 Keyboard
+
+    EventMap:
+      Key:
+        G7     : 30
+        G9     : 2
+        G10    : 3
+        G11    : 4
+        G13    : 5
+        G14    : 6
+        G15    : 7
+        G16    : 8
+        G17    : 9
+        G18    : 10
+        G19    : 11
+        G20    : 12
+        GShift : 48
+
