@@ -2,6 +2,7 @@
 #include "profile.hpp"
 
 #include <zzzlib/zzz.hpp>
+#include <serial/deserialize.hpp>
 
 int main() {
 
@@ -25,8 +26,8 @@ int main() {
     // Button 4
     g600Device.addEvent(9, {1, 5, 1}); // Press
     g600Device.addEvent(10, {1, 5, 0}); // Release
-    g600Device.addEvent(11, {1, 5, 2}); // Repeat
-
+    g600Device.addEvent(11, {1, 5, 2}); // Repeat   
+    
     // Button 5
     g600Device.addEvent(12, {1, 6, 1}); // Press
     g600Device.addEvent(13, {1, 6, 0}); // Release
@@ -179,14 +180,27 @@ int main() {
     g600Profile.appendLayer(layer2);
     g600Profile.appendLayer(layer1);
 
-    size_t event;
-    while (true) {
-        if (g600Device.read(event)) {
-            std::cout << "Event Read: " << event << "\n";
-            g600Profile.executeEvent(event);
-        }
-    }
+    // size_t event;
+    // while (true) {
+    //     if (g600Device.read(event)) {
+    //         std::cout << "Event Read: " << event << "\n";
+    //         g600Profile.executeEvent(event);
+    //     }
+    // }
 
+
+    char* zzzInstruction = 
+        "inst1:val,inst1.1:\n"
+        "  val, val\n"
+        "inst2:inst2.1:val, val; val, val";
+    
+    zzz::Node* root = new zzz::Node("", nullptr);
+    zzz::Parser parser(root);
+    std::stringstream stream(zzzInstruction);
+    parser.parse(stream);
+
+    serial::BaseInstruction inst;
+    
 
 
     return 0;

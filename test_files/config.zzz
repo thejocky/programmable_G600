@@ -16,7 +16,7 @@ Devices:
     Name: Logitech Gaming Mouse G600 Keyboard
 
     EventMap:
-      Key:
+      KEY:
         G7     : 30
         G9     : 2
         G10    : 3
