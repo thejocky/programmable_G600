@@ -4,6 +4,16 @@
 #include <zzzlib/zzz.hpp>
 #include <serial/deserialize.hpp>
 
+
+void printDeleteInst(serial::BaseInstruction* inst, int depth=0) {
+    for (int i = 0; i < depth; i++) std::cout << "  ";
+    std::cout << inst->name << "\n";
+    for (int i = 0; i < inst->argc; i++) 
+        printDeleteInst(&(inst->argv[i]), depth+1);
+    delete[] inst->argv;
+    inst->argc = 0;
+}
+
 int main() {
 
     Device g600Device("/dev/input/by-id/usb-Logitech_Gaming_Mouse_G600_A660D9B71EF20017-if01-event-kbd");
@@ -191,8 +201,9 @@ int main() {
 
     char* zzzInstruction = 
         "inst1:val,inst1.1:\n"
-        "  val, val\n"
-        "inst2:inst2.1:val, val; val, val";
+        "    val, val\n"
+        "  val\n"
+        "inst2:inst2.1:val, inst2.1.1: val ;; val, val";
     
     zzz::Node* root = new zzz::Node("", nullptr);
     zzz::Parser parser(root);
@@ -200,8 +211,14 @@ int main() {
     parser.parse(stream);
 
     serial::BaseInstruction inst;
+    zzz::printNode(root);
     
-
+    deserialize(inst, root->firstChild());
+    printDeleteInst(&inst);
+    deserialize(inst, root->lastChild());
+    printDeleteInst(&inst);
+    
 
     return 0;
 }
+
