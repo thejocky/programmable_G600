@@ -2,13 +2,13 @@
 
 
 
-#include <map>
 
-#include <zzzlib/zzz.hpp>
 #include <cstring>
 #include <cstdlib>
 #include <utility>
-
+#include <map>
+#include <string>
+// Including Data Format specific serialization headers below struct declarations
 
 
 
@@ -23,19 +23,20 @@ namespace serial {
         int32_t argc;
     };
 
-    // Contains 2 keys, one for key and one for state
-    struct EventKey {
-        char* keyA;
-        char* keyB;
-        bool operator<(const EventKey& other) {
-            if (int8_t val = strcmp(keyA, other.keyA))
-                return val < 0;
-            return strcmp(keyB, other.keyB) < 0;
-        }
-    };
+    // // Contains 2 keys, one for key and one for state
+    // struct EventKey {
+    //     std::string keyA;
+    //     std::string keyB;
+    //     bool operator<(const EventKey& other) {
+    //         if (int8_t val = keyA.compare(other.keyA))
+    //             return val < 0;
+    //         return keyB.compare(other.keyB) < 0;
+    //     }
+    // };
 
     struct EventMap {
-        std::map<EventKey, BaseInstruction> map;
+        std::vector<std::tuple<std::string,
+            std::string,BaseInstruction>> map;
     };
 
     struct BaseLayer {
@@ -53,5 +54,7 @@ namespace serial {
 
 }
 
-
+// Data Format specific serialization files
 #include <serial/serial_zzz.hpp>
+
+
