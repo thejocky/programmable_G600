@@ -30,7 +30,7 @@ namespace zzz {
             if (!keyNodeA->childCount())
                 break; // TODO: Have warning in missing second key  
             
-            for (Node* keyNodeB = objRoot->firstChild(); keyNodeB;
+            for (Node* keyNodeB = keyNodeA->firstChild(); keyNodeB;
                     keyNodeB = keyNodeB->sibling()) {
                         
                 if (!keyNodeA->childCount())
@@ -39,6 +39,7 @@ namespace zzz {
                     keyNodeA->string(), keyNodeB->string(),
                     deserialize<serial::BaseInstruction>(keyNodeB->firstChild())
                 ));
+                // TODO: Add suport for multiple commands or have error
             }
         }
     }

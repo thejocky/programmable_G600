@@ -14,6 +14,17 @@ void printDeleteInst(serial::BaseInstruction* inst, int depth=0) {
     inst->argc = 0;
 }
 
+
+void printDeleteMap(serial::EventMap& events, int depth=0) {
+    std::cout << events.map.size() << "\n";
+    for (int i = 0; i < events.map.size(); i++) {
+        std::cout << std::get<0>(events.map[i]) << ": "
+            << std::get<1>(events.map[i]) << "\n";
+        printDeleteInst(&std::get<2>(events.map[i]), 1);
+    }
+}
+
+
 int main() {
 
     Device g600Device("/dev/input/by-id/usb-Logitech_Gaming_Mouse_G600_A660D9B71EF20017-if01-event-kbd");
@@ -200,23 +211,27 @@ int main() {
 
 
     char* zzzInstruction = 
-        "inst1:val,inst1.1:\n"
-        "    val, val\n"
-        "  val\n"
-        "inst2:inst2.1:val, inst2.1.1: val ;; val, val";
+        "Event:\n"
+        "  G9:press: Event1: Arg1.1, Event1.2: Arg1.2.1\n"
+        "    release: Event2: Arg2.1\n"
+        "  press:\n"
+        "    G1      : Event3: Arg3.1\n"
+        "    G2      : Event4: Arg4.1\n"
+        "    G3      : Event5: Arg5.1\n"
+        "    G4      : Event6: Arg6.1\n";
     
     zzz::Node* root = new zzz::Node("", nullptr);
     zzz::Parser parser(root);
     std::stringstream stream(zzzInstruction);
     parser.parse(stream);
 
-    serial::BaseInstruction inst;
+    serial::EventMap map;
     zzz::printNode(root);
     
-    deserialize(inst, root->firstChild());
-    printDeleteInst(&inst);
-    deserialize(inst, root->lastChild());
-    printDeleteInst(&inst);
+    deserialize(map, root->firstChild());
+    printDeleteMap(map);
+    // deserialize(map, root->lastChild());
+    // printDeleteMap(map);
     
 
     return 0;
