@@ -1,0 +1,46 @@
+
+
+# Home layer for quickly swapping between layers
+Layer: homeLayerA:
+  Events:
+    GShift:press : push:homeLayerB
+    
+    G7:press     : pop:homeLayerB
+      release    : pop:homeLayerA
+
+    press:
+      G9  : push: stellaris
+      G10 : push: Factorio
+      G11 : push: minecraft
+      G12 : push: media
+
+
+
+
+# Home layer for quickly swapping between layers
+Layer: homeLayerB:
+  Events:
+    GShift:press : push:homeLayerA
+
+    G7:press     : pop:homeLayerA
+      release    : pop:homeLayerB
+    
+    
+
+
+
+# Empty layer except for G7 directing to homeLayer
+Layer:baseLayer:
+    Events:G7:press : push:homeLayerA 
+
+      
+
+
+
+
+
+Profile: exampleProfile,
+
+  activateDevice:G600_kbd,
+    push: baseLayer,
+    push: homeLayer,
