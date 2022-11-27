@@ -5,29 +5,69 @@ initialProfile:
 
 Devices:
   
-  G600_kbd:
+  G600:
 
-    # Use either ID or Name to specify device, not both
+    Handles:
 
-    # Specific to individual device
-    # ID: usb-Logitech_Gaming_Mouse_G600_A660D9B71EF20017-if01-event-kbd
+      Keyboard:
+        KEY:
+          G7, G9, G10, G11,
+          G12, G13, G14, G15,
+          G16, G17, G18, G19,
+          G20, GShift;
+      Mouse:
+        Rel:
+          RelX, RelY, Wheel
+      
+    Instances:
 
-    # Specific to one model of device
-    Name: Logitech Gaming Mouse G600 Keyboard
+      # Optional default event map,
+      # Deactivate it by defining it as NULL
+      General: NULL
 
-    EventMap:
-      KEY:
-        G7     : 30
-        G9     : 2
-        G10    : 3
-        G11    : 4
-        G13    : 5
-        G14    : 6
-        G15    : 7
-        G16    : 8
-        G17    : 9
-        G18    : 10
-        G19    : 11
-        G20    : 12
-        GShift : 48
+      Main: 
+        Keyboard: usb-Logitech_Gaming_Mouse_G600_A660D9B71EF20017-if01-event-kbd
+          KEY:
+            G7     : 30
+            G9     : 2
+            G10    : 3
+            G11    : 4
+            G13    : 5
+            G14    : 6
+            G15    : 7
+            G16    : 8
+            G17    : 9
+            G18    : 10
+            G19    : 11
+            G20    : 12
+            GShift : 48
+          
+        Mouse: usb-Logitech_Gaming_Mouse_G600_A660D9B71EF20017-event-mouse
+          REL:
+            RelX   : 0
+            RelY   : 1
+            Wheel  : 8
+      
+
+      : Keyboard: usb-Logitech_Gaming_Mouse_G600_C650D3B75AF32001-if01-event-kbd
+          KEY:
+              G7     : 1
+              G9     : 2
+              G10    : 3
+              G11    : 4
+              G13    : 5
+              G14    : 6
+              G15    : 7
+              G16    : 8
+              G17    : 9
+              G18    : 10
+              G19    : 11
+              G20    : 12
+              GShift : 13
+
+        Mouse: usb-Logitech_Gaming_Mouse_G600_A660D9B71EF20017-event-mouse
+          REL:
+            RelX   : 0
+            RelY   : 1
+            Wheel  : 8
 
