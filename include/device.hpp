@@ -5,6 +5,21 @@
 #include <linux/input.h>
 #include <linux/input-event-codes.h>
 
+class EventMap {
+    struct Node {
+        int event;
+        std::map<Node> children;
+    };
+
+    EventMap() {}
+    ~EventMap() {}
+
+    void loadEvent();
+
+    int event()
+
+};
+
 class Device {
 
     public:
