@@ -23,7 +23,7 @@ Devices:
 
       # Optional default event map,
       # Deactivate it by defining it as NULL
-      General: NULL
+      # General: NULL
 
       Main: 
         Keyboard: usb-Logitech_Gaming_Mouse_G600_A660D9B71EF20017-if01-event-kbd

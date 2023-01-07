@@ -23,16 +23,6 @@ namespace serial {
         int32_t argc;
     };
 
-    // // Contains 2 keys, one for key and one for state
-    // struct EventKey {
-    //     std::string keyA;
-    //     std::string keyB;
-    //     bool operator<(const EventKey& other) {
-    //         if (int8_t val = keyA.compare(other.keyA))
-    //             return val < 0;
-    //         return keyB.compare(other.keyB) < 0;
-    //     }
-    // };
 
     struct EventMap {
         std::vector<std::tuple<std::string,
@@ -40,16 +30,32 @@ namespace serial {
     };
 
     struct BaseLayer {
-        char* type;
-        char* name;
+        std::string type;
+        std::string name;
         EventMap events;
+    };
+
+    struct DeviceHandle {
+        std::string name;
+        std::vector<std::pair<std::string, std::vector<std::string>>> handledEvents;
+    };
+
+    struct DeviceHandleInstance {
+        std::string handle;
+        std::string handlePath;
+        std::vector<std::tuple<std::string, std::string, unsigned short>> events;
+    };
+
+    struct DeviceInstance {
+        std::string name;
+        std::vector<DeviceHandleInstance> handles;
+        
     };
 
     struct BaseDevice {
         char* name;
-        char* ID;
-        char* deviceName;
-        std::pair<std::string,uint16_t> events[7];
+        std::vector<DeviceHandle> handles;
+        std::vector<DeviceInstance> instances;
     };
 
 }

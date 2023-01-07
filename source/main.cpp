@@ -211,25 +211,42 @@ int main() {
 
 
     char* zzzInstruction = 
-        "Event:\n"
-        "  G9:press: Event1: Arg1.1, Event1.2: Arg1.2.1\n"
-        "    release: Event2: Arg2.1\n"
-        "  press:\n"
-        "    G1      : Event3: Arg3.1\n"
-        "    G2      : Event4: Arg4.1\n"
-        "    G3      : Event5: Arg5.1\n"
-        "    G4      : Event6: Arg6.1\n";
+    "# Home layer for quickly swapping between layers\n"
+    "Layer: homeLayerA:\n"
+    "Events:\n"
+    "    GShift:press : push:homeLayerB\n"
+        
+    "    G7:press     : pop:homeLayerB\n"
+    "    release    : pop:homeLayerA\n"
+
+    "    press:\n"
+    "    G9  : push: stellaris\n"
+    "    G10 : push: Factorio\n"
+    "    G11 : push: minecraft\n"
+    "    G12 : push: media\n";
+
+
+    serial::BaseLayer layerTest = {
+        "Layer", "homeLayerA",
+        {{
+            {"GShift", "press", {"push", new serial::BaseInstruction{"HomeLayerB", nullptr, 0}, 1}},
+            {"G7", "press", {"pop", new serial::BaseInstruction{"HomeLayerB", nullptr, 0}, 1}},
+            {"G7", "press", {"pop", new serial::BaseInstruction{"HomeLayerA", nullptr, 0}, 1}},
+            {"press", "G9", {"push", new serial::BaseInstruction{"stellaris", nullptr, 0}, 1}},
+            {"press", "G10", {"push", new serial::BaseInstruction{"Factorio", nullptr, 0}, 1}},
+            {"press", "G11", {"push", new serial::BaseInstruction{"minecraft", nullptr, 0}, 1}},
+            {"press", "G12", {"push", new serial::BaseInstruction{"media", nullptr, 0}, 1}}
+        }}
+    };
     
     zzz::Node* root = new zzz::Node("", nullptr);
     zzz::Parser parser(root);
     std::stringstream stream(zzzInstruction);
     parser.parse(stream);
 
-    serial::EventMap map;
     zzz::printNode(root);
     
-    deserialize(map, root->firstChild());
-    printDeleteMap(map);
+
     // deserialize(map, root->lastChild());
     // printDeleteMap(map);
     
