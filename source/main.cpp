@@ -30,34 +30,34 @@ int main() {
     Device g600Device("/dev/input/by-id/usb-Logitech_Gaming_Mouse_G600_A660D9B71EF20017-if01-event-kbd");
 
     // Button 1
-    g600Device.addEvent(0, {1, 2, 1}); // Press
-    g600Device.addEvent(1, {1, 2, 0}); // Release
-    g600Device.addEvent(2, {1, 2, 2}); // Repeat
+    g600Device.addEvent(1, 1, 2, 1); // Press
+    g600Device.addEvent(2, 1, 2, 0); // Release
+    g600Device.addEvent(3, 1, 2, 2); // Repeat
 
     // Button 2
-    g600Device.addEvent(3, {1, 3, 1}); // Press
-    g600Device.addEvent(4, {1, 3, 0}); // Release
-    g600Device.addEvent(5, {1, 3, 2}); // Repeat
+    g600Device.addEvent(4, 1, 3, 1); // Press
+    g600Device.addEvent(5, 1, 3, 0); // Release
+    g600Device.addEvent(6, 1, 3, 2); // Repeat
 
     // Button 3
-    g600Device.addEvent(6, {1, 4, 1}); // Press
-    g600Device.addEvent(7, {1, 4, 0}); // Release
-    g600Device.addEvent(8, {1, 4, 2}); // Repeat
+    g600Device.addEvent(7, 1, 4, 1); // Press
+    g600Device.addEvent(8, 1, 4, 0); // Release
+    g600Device.addEvent(9, 1, 4, 2); // Repeat
 
     // Button 4
-    g600Device.addEvent(9, {1, 5, 1}); // Press
-    g600Device.addEvent(10, {1, 5, 0}); // Release
-    g600Device.addEvent(11, {1, 5, 2}); // Repeat   
+    g600Device.addEvent(10, 1, 5, 1); // Press
+    g600Device.addEvent(11, 1, 5, 0); // Release
+    g600Device.addEvent(12, 1, 5, 2); // Repeat   
     
     // Button 5
-    g600Device.addEvent(12, {1, 6, 1}); // Press
-    g600Device.addEvent(13, {1, 6, 0}); // Release
-    g600Device.addEvent(14, {1, 6, 2}); // Repeat
+    g600Device.addEvent(13, 1, 6, 1); // Press
+    g600Device.addEvent(14, 1, 6, 0); // Release
+    g600Device.addEvent(15, 1, 6, 2); // Repeat
 
     // Button 6
-    g600Device.addEvent(15, {1, 7, 1}); // Press
-    g600Device.addEvent(16, {1, 7, 0}); // Release
-    g600Device.addEvent(17, {1, 7, 2}); // Repeat
+    g600Device.addEvent(16, 1, 7, 1); // Press
+    g600Device.addEvent(17, 1, 7, 0); // Release
+    g600Device.addEvent(18, 1, 7, 2); // Repeat
 
 
 
@@ -201,50 +201,52 @@ int main() {
     g600Profile.appendLayer(layer2);
     g600Profile.appendLayer(layer1);
 
-    // size_t event;
-    // while (true) {
-    //     if (g600Device.read(event)) {
-    //         std::cout << "Event Read: " << event << "\n";
-    //         g600Profile.executeEvent(event);
-    //     }
-    // }
+    size_t event;
+    while (true) {
+        if (g600Device.read(event)) {
+            
+            std::cout << "Event Read: " << event << "\n";
+            std::cout <<"\n";
+            // g600Profile.executeEvent(event);
+        }
+    }
 
 
-    char* zzzInstruction = 
-    "# Home layer for quickly swapping between layers\n"
-    "Layer: homeLayerA:\n"
-    "Events:\n"
-    "    GShift:press : push:homeLayerB\n"
+    // char* zzzInstruction = 
+    // "# Home layer for quickly swapping between layers\n"
+    // "Layer: homeLayerA:\n"
+    // "Events:\n"
+    // "    GShift:press : push:homeLayerB\n"
         
-    "    G7:press     : pop:homeLayerB\n"
-    "    release    : pop:homeLayerA\n"
+    // "    G7:press     : pop:homeLayerB\n"
+    // "    release    : pop:homeLayerA\n"
 
-    "    press:\n"
-    "    G9  : push: stellaris\n"
-    "    G10 : push: Factorio\n"
-    "    G11 : push: minecraft\n"
-    "    G12 : push: media\n";
+    // "    press:\n"
+    // "    G9  : push: stellaris\n"
+    // "    G10 : push: Factorio\n"
+    // "    G11 : push: minecraft\n"
+    // "    G12 : push: media\n";
 
 
-    serial::BaseLayer layerTest = {
-        "Layer", "homeLayerA",
-        {{
-            {"GShift", "press", {"push", new serial::BaseInstruction{"HomeLayerB", nullptr, 0}, 1}},
-            {"G7", "press", {"pop", new serial::BaseInstruction{"HomeLayerB", nullptr, 0}, 1}},
-            {"G7", "press", {"pop", new serial::BaseInstruction{"HomeLayerA", nullptr, 0}, 1}},
-            {"press", "G9", {"push", new serial::BaseInstruction{"stellaris", nullptr, 0}, 1}},
-            {"press", "G10", {"push", new serial::BaseInstruction{"Factorio", nullptr, 0}, 1}},
-            {"press", "G11", {"push", new serial::BaseInstruction{"minecraft", nullptr, 0}, 1}},
-            {"press", "G12", {"push", new serial::BaseInstruction{"media", nullptr, 0}, 1}}
-        }}
-    };
+    // serial::BaseLayer layerTest = {
+    //     "Layer", "homeLayerA",
+    //     {{
+    //         {"GShift", "press", {"push", new serial::BaseInstruction{"HomeLayerB", nullptr, 0}, 1}},
+    //         {"G7", "press", {"pop", new serial::BaseInstruction{"HomeLayerB", nullptr, 0}, 1}},
+    //         {"G7", "press", {"pop", new serial::BaseInstruction{"HomeLayerA", nullptr, 0}, 1}},
+    //         {"press", "G9", {"push", new serial::BaseInstruction{"stellaris", nullptr, 0}, 1}},
+    //         {"press", "G10", {"push", new serial::BaseInstruction{"Factorio", nullptr, 0}, 1}},
+    //         {"press", "G11", {"push", new serial::BaseInstruction{"minecraft", nullptr, 0}, 1}},
+    //         {"press", "G12", {"push", new serial::BaseInstruction{"media", nullptr, 0}, 1}}
+    //     }}
+    // };
     
-    zzz::Node* root = new zzz::Node("", nullptr);
-    zzz::Parser parser(root);
-    std::stringstream stream(zzzInstruction);
-    parser.parse(stream);
+    // zzz::Node* root = new zzz::Node("", nullptr);
+    // zzz::Parser parser(root);
+    // std::stringstream stream(zzzInstruction);
+    // parser.parse(stream);
 
-    zzz::printNode(root);
+    // zzz::printNode(root);
     
 
     // deserialize(map, root->lastChild());

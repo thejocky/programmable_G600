@@ -2,31 +2,50 @@
 
 #include <fcntl.h>
 #include <unistd.h>
+#include <iostream>
+#include <exception>
 
-
-void EventMap::loadEvent(int event, uint16_t type) {
+void EventMap::loadEvent(size_t event, uint16_t type) {
     if (!event) throw;
     map[type].event = event;
 }
-void EventMap::loadEvent(int event, uint16_t type, uint16_t code) {
+void EventMap::loadEvent(size_t event, uint16_t type, uint16_t code) {
     if (!event) throw;
-    map[type][code].event = event;
+
+    CodeMap* typeNode = &(map[type]);
+    if (typeNode->event > 0) throw std::runtime_error("ERROR: Attempted overloaded type event with code event");
+    *typeNode = CodeMap{-1};
+
+    (*typeNode)[code].event = event;
 }
-void EventMap::loadEvent(int event, uint16_t type, uint16_t code, int32_t value) {
+void EventMap::loadEvent(size_t event, uint16_t type, uint16_t code, int32_t value) {
     if (!event) throw;
-    map[type][code][value].event = event;
+
+    CodeMap *codeMap = &(map[type]);
+    if (codeMap->event > 0) throw std::runtime_error("ERROR: Attempted to overloaded type based event with value based event");
+    codeMap->event = -1;
+
+    ValueMap* valueMap = &(*codeMap)[code];
+    if (valueMap->event > 0) throw std::runtime_error("ERROR: Attempted to overloaded code based event with a value based event");
+    valueMap->event = -1;
+
+    (*valueMap)[value] = event;
 }
 
 
 int EventMap::event(uint16_t type, uint16_t code, int32_t value) {
-    Node *current = &map[type];
-    if (current.event) return current.event;
-    current = &(*current)[code];
-    if (current.event) return current.event;
-    current = &(*current)[code];
-    if (current.event) return current.event;
-    throw; // Error: map shouldn't under normal working conditions
-                  // access a non-loaded event
+    auto typePair = map.find(type);
+    if (typePair == map.end()) return 0;
+    if (typePair->second.event > 0) return typePair->second.event;
+
+    auto codePair = typePair->second.map.find(code);
+    if (codePair == typePair->second.map.end()) return 0;
+    if (codePair->second.event > 0) return codePair->second.event;
+
+    auto valuePair = codePair->second.map.find(value);
+    if (valuePair == codePair->second.map.end()) return 0;
+    if (valuePair->second > 0) return valuePair->second;
+    return valuePair->second;
 }
 
 
@@ -40,24 +59,24 @@ Device::Device(const char* eventPath) :
     openHandler();
 }
 
-Device::Device(const char* eventPath, std::map<EventDescriptor, size_t> &eventMap) :
-    eventPath_(eventPath),
-    fd_(0),
-    open_(false),
-    buffer_{},
-    eventMap_(eventMap)
-{
-    openHandler();
-}
+// Device::Device(const char* eventPath, std::map<EventDescriptor, size_t> &eventMap) :
+//     eventPath_(eventPath),
+//     fd_(0),
+//     open_(false),
+//     buffer_{},
+//     eventMap_(eventMap)
+// {
+//     openHandler();
+// }
 
 void Device::addEvent(size_t event, uint16_t type) {
-    eventMap_.loadEvent(type);
+    eventMap_.loadEvent(event, type);
 }
 void Device::addEvent(size_t event, uint16_t type, uint16_t code) {
-    eventMap_.loadEvent(type, code);
+    eventMap_.loadEvent(event, type, code);
 }
 void Device::addEvent(size_t event, uint16_t type, uint16_t code, int32_t value) {
-    eventMap_.loadEvent(type, code, value);
+    eventMap_.loadEvent(event, type, code, value);
 }
 
 bool Device::openHandler() {
@@ -73,7 +92,7 @@ bool Device::read(size_t &event) {
     input_event buffer;
     ssize_t n = ::read(fd_, &buffer, sizeof(buffer));
     if (n < sizeof(buffer)) return false;
-    if (event.type == EV_SYN) return false;
+    if (buffer.type == EV_SYN) return false;
     event = eventMap_.event(buffer.type, buffer.code, buffer.value);
     return true;
 }
