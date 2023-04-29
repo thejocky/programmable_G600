@@ -52,8 +52,18 @@ namespace zzz {
         }
         // Read in layer name
         object.type = objRoot->string();
-        object.name, objRoot->firstChild()->string();
+        object.name = objRoot->firstChild()->string();
         deserialize(object.events, objRoot->child(1));
+    }
+
+    void deserialize(serial::BaseProfile &object, Node* objRoot) {
+        if (!objRoot) return;
+        if (objRoot->childCount() != 3) {
+            throw; // TODO: Have warning incorrect number of arguments
+        }
+        deserialize(object.name, objRoot);
+        deserialize(object.devices, objRoot->child("Devices"));
+        deserialize(object.init, objRoot->child("Init"));
     }
 
     void deserialize(serial::DeviceHandle& object, Node* objRoot) {

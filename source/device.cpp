@@ -59,16 +59,6 @@ Device::Device(const char* eventPath) :
     openHandler();
 }
 
-// Device::Device(const char* eventPath, std::map<EventDescriptor, size_t> &eventMap) :
-//     eventPath_(eventPath),
-//     fd_(0),
-//     open_(false),
-//     buffer_{},
-//     eventMap_(eventMap)
-// {
-//     openHandler();
-// }
-
 void Device::addEvent(size_t event, uint16_t type) {
     eventMap_.loadEvent(event, type);
 }

@@ -16,7 +16,6 @@ void printDeleteInst(serial::BaseInstruction* inst, int depth=0) {
 
 
 void printDeleteMap(serial::EventMap& events, int depth=0) {
-    std::cout << events.map.size() << "\n";
     for (int i = 0; i < events.map.size(); i++) {
         std::cout << std::get<0>(events.map[i]) << ": "
             << std::get<1>(events.map[i]) << "\n";
@@ -24,6 +23,19 @@ void printDeleteMap(serial::EventMap& events, int depth=0) {
     }
 }
 
+void printDeleteBaseLayer(serial::BaseLayer &layer) {
+    std::cout  << "Layer : " << layer.type << " : " << layer.name << '\n';
+    printDeleteMap(layer.events);
+}
+
+void printDeleteBaseProfile(serial::BaseProfile &profile) {
+    std::cout << "Name: " << profile.name << '\n';
+    std::cout << "devices:\n";
+    for (auto device : profile.devices) 
+        std::cout << "  " << device << '\n';
+    for (auto event : profile.init)
+        printDeleteInst(&event);
+}
 
 int main() {
 
@@ -201,56 +213,86 @@ int main() {
     g600Profile.appendLayer(layer2);
     g600Profile.appendLayer(layer1);
 
-    size_t event;
-    while (true) {
-        if (g600Device.read(event)) {
+    // size_t event;
+    // while (true) {
+    //     if (g600Device.read(event)) {
             
-            std::cout << "Event Read: " << event << "\n";
-            std::cout <<"\n";
-            // g600Profile.executeEvent(event);
-        }
-    }
+    //         std::cout << "Event Read: " << event << "\n";
+    //         std::cout <<"\n";
+    //         // g600Profile.executeEvent(event);
+    //     }
+    // }
 
 
     // char* zzzInstruction = 
     // "# Home layer for quickly swapping between layers\n"
     // "Layer: homeLayerA:\n"
-    // "Events:\n"
+    // "  Events:\n"
     // "    GShift:press : push:homeLayerB\n"
-        
     // "    G7:press     : pop:homeLayerB\n"
-    // "    release    : pop:homeLayerA\n"
-
+    // "      release    : pop:homeLayerA\n"
     // "    press:\n"
-    // "    G9  : push: stellaris\n"
-    // "    G10 : push: Factorio\n"
-    // "    G11 : push: minecraft\n"
-    // "    G12 : push: media\n";
+    // "      G9  : push: stellaris\n"
+    // "      G10 : push: Factorio\n"
+    // "      G11 : push: minecraft\n"
+    // "      G12 : push: media\n";
+
+    char* zzzProfile = 
+    "Profile: exampleProfile,\n"
+    "  Devices:\n"
+    "    G600_kbd\n"
+    "  Init:\n"
+    "    activate : G600_kbd\n"
+    "    push: backingLayer\n"
+    "    push: homeLayer\n";
 
 
-    // serial::BaseLayer layerTest = {
-    //     "Layer", "homeLayerA",
-    //     {{
-    //         {"GShift", "press", {"push", new serial::BaseInstruction{"HomeLayerB", nullptr, 0}, 1}},
-    //         {"G7", "press", {"pop", new serial::BaseInstruction{"HomeLayerB", nullptr, 0}, 1}},
-    //         {"G7", "press", {"pop", new serial::BaseInstruction{"HomeLayerA", nullptr, 0}, 1}},
-    //         {"press", "G9", {"push", new serial::BaseInstruction{"stellaris", nullptr, 0}, 1}},
-    //         {"press", "G10", {"push", new serial::BaseInstruction{"Factorio", nullptr, 0}, 1}},
-    //         {"press", "G11", {"push", new serial::BaseInstruction{"minecraft", nullptr, 0}, 1}},
-    //         {"press", "G12", {"push", new serial::BaseInstruction{"media", nullptr, 0}, 1}}
-    //     }}
-    // };
+    serial::BaseLayer layerTest = {
+        "Layer", "homeLayerA",
+        {{
+            {"GShift", "press", {"push", new serial::BaseInstruction{"HomeLayerB", nullptr, 0}, 1}},
+            {"G7", "press", {"pop", new serial::BaseInstruction{"HomeLayerB", nullptr, 0}, 1}},
+            {"G7", "press", {"pop", new serial::BaseInstruction{"HomeLayerA", nullptr, 0}, 1}},
+            {"press", "G9", {"push", new serial::BaseInstruction{"stellaris", nullptr, 0}, 1}},
+            {"press", "G10", {"push", new serial::BaseInstruction{"Factorio", nullptr, 0}, 1}},
+            {"press", "G11", {"push", new serial::BaseInstruction{"minecraft", nullptr, 0}, 1}},
+            {"press", "G12", {"push", new serial::BaseInstruction{"media", nullptr, 0}, 1}}
+        }}
+    };
     
-    // zzz::Node* root = new zzz::Node("", nullptr);
-    // zzz::Parser parser(root);
-    // std::stringstream stream(zzzInstruction);
+    zzz::Node* root = new zzz::Node("", nullptr);
+    zzz::Parser parser(root);
+    std::stringstream stream(zzzProfile);
     // parser.parse(stream);
 
     // zzz::printNode(root);
-    
 
-    // deserialize(map, root->lastChild());
-    // printDeleteMap(map);
+    try {
+        parser.parse(stream);
+        zzz::printNode(root);
+    } catch (zzz::parser_error& e) {
+        std::cerr << e.line() << ":" 
+            << e.column() << ": "
+            << "\033[1;31m" // Set color output to red and bold
+            << e.what() << ": "
+            << "\033[0m" // Return to normal text
+            << e.info() << ".\n";
+        return 1;
+    } catch (zzz::assembling_error& e) {
+        std::cerr 
+            << "\033[1;31m" // Set color output to red and bold
+            << e.what() << ": "
+            << "\033[0m" // Return to normal text
+            << e.info() << ": \n"
+            << "String: " << e.nodeString() << "\n"
+            << "Depth: " << e.nodeDepth() << "\n";
+        return 1;
+    }
+    std::cout << "deserializing\n";
+    serial::BaseProfile profile;
+    deserialize(profile, root->lastChild());
+    std::cout << "printing profile\n";b
+    printDeleteBaseProfile(profile);
     
 
     return 0;

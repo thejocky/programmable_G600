@@ -30,7 +30,7 @@ Layer: homeLayerB:
 
 
 # Empty layer except for G7 directing to homeLayer
-Layer:baseLayer:
+Layer: backingLayer:
     Events:G7:press : push:homeLayerA 
 
       
@@ -40,7 +40,9 @@ Layer:baseLayer:
 
 
 Profile: exampleProfile,
-
-  activateDevice:G600_kbd,
-    push: baseLayer,
-    push: homeLayer,
+  Devices:
+    G600_kbd
+  Init:
+    activate : G600_kbd
+    push: backingLayer
+    push: homeLayer
