@@ -9,48 +9,45 @@ namespace instructions {
 
 
     template <typename T>
-    struct Instruction_base {
-        Instruction_base()=delete;
+    struct Instruction_Base {
+        Instruction_Base()=delete;
         virtual T evaluate()=0; 
     };
 
     template <typename... Args>
-    struct CodeBlock {
+    struct CodeBlock : public Instruction_Base<void> {
         std::tuple<Instruction_Base<Args>*...> instructions;
 
-        CodeBlock()
+        CodeBlock(Instruction_Base<Args>*... statements):
+            instructions(make_tuple(statements)...)
+        {}
 
-        // Base case for instruction iteration
-        template <std::size_t Index = sizeof...(Args) - 1>
-        inline void executeInstructions(std::tuple<Instruction_Base<Args>*...> instructions) {
-            std::get<Index>(instructions).execute();
-        }
-
-        // Recursive case for instruction iteration
-        template <std::size_t Index = sizeof...(Args) - 1>
-        requires (!IsZeroIndex<std::integral_constant<std::size_t, Index>>)
-        inline void executeInst(std::tuple<Instruction_Base<Args>*...> instructions) {
-            std::get<Index>(instructions).execute();
-            executeInst<Index + 1>(instructions);
+        void evaluate() override {
+            std::apply([](auto&&... args) { (args->evaluate(), ...); }, instructions);
         }
     };
 
     template <typename T>
-    struct Variable : public Instruction_base<T> {
+    struct Variable : public Instruction_Base<T> {
         T val;
-        T evalutate() {return val;}
+        Variable(T value) : val(value) {}
+        T evaluate() {return val;}
     };
 
     template <typename... Args>
-    struct if_statement : public Instruction_base<void> {
-        Instruction_base<void> *chainedStatements_;
-        codeBlock<Args> code;
-    
+    struct if_statement : public Instruction_Base<void> {
+        Instruction_Base<bool>* condition;
+        CodeBlock<Instruction_Base<Args>*...> code;
+        Instruction_Base<void>* else_statement;
 
-        if_statement()=0;
-        generate(Instruction_Base<Args>*... instructions) {
-            
+        if_statement(Instruction_Base<bool>* cond, Instruction_Base<Args>*... statements)
+            : condition(cond), code(statements...) {}
+
+        void evaluate() override {
+            if (condition->evaluate())
+                code.execute();
+            else if (else_statement)
+                else_statement->evaluate();
         }
-    }
-
+    };
 }

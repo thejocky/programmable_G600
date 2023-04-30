@@ -291,7 +291,7 @@ int main() {
     std::cout << "deserializing\n";
     serial::BaseProfile profile;
     deserialize(profile, root->lastChild());
-    std::cout << "printing profile\n";b
+    std::cout << "printing profile\n";
     printDeleteBaseProfile(profile);
     
 
