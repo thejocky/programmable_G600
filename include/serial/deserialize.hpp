@@ -69,28 +69,28 @@ namespace serial {
 #include <serial/serial_zzz.hpp>
 
 
-namespace serial {
+// namespace serial {
 
-    // Layer Deserialization and constructor using generic data format
+//     // Layer Deserialization and constructor using generic data format
 
-    class ProfileConstructor {
-        std::vector<BaseLayer> layers_;
-        BaseProfile profile_;
+//     class ProfileConstructor {
+//         std::vector<BaseLayer> layers_;
+//         BaseProfile profile_;
 
-        std::map<std::string, BaseLayer> layers_;
+//         std::map<std::string, BaseLayer> layers_;
 
-        static map<std::string, > validInstructions;
+//         static map<std::string, > validInstructions;
 
-        public:
+//         public:
 
-        BaseLayer &getLayer();
-        BaseProfile &getProfile() {return profile_;}
+//         BaseLayer &getLayer();
+//         BaseProfile &getProfile() {return profile_;}
 
-        ProfileConstructor(const char* profileFilePath);
+//         ProfileConstructor(const char* profileFilePath);
 
-        Profile finalizeProfile();
+//         Profile finalizeProfile();
 
 
-    };
+//     };
 
-}
+// }
