@@ -4,6 +4,8 @@
 #include <zzzlib/zzz.hpp>
 #include <serial/deserialize.hpp>
 
+#include <cstdint>
+
 
 void printDeleteInst(serial::BaseInstruction* inst, int depth=0) {
     for (int i = 0; i < depth; i++) std::cout << "  ";

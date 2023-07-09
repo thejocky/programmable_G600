@@ -1,0 +1,20 @@
+
+
+
+
+
+let: i32: intA : 1000
+let: i32: intB : 1001
+if: equals: intA, intB
+  log: intA and intB are equal
+else:
+  log: intA and intB are not equal
+
+set: intB: 1000
+if: equals: intA, intB
+  log: intA and intB are equal
+else:
+  log: intA and intB are not equal
+  
+
+

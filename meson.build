@@ -15,4 +15,7 @@ exe = executable('programmable_g600', src_files,
   install : true, include_directories : incdir,
   dependencies : zzz)
 
+instruction_test = executable('prog', 'test_files/test_instruction_system.cpp')
+test('instruction test', instruction_test)
+
 
