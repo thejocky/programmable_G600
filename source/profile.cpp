@@ -1,6 +1,7 @@
 #include <profile.hpp>
 
 #include <string.h>
+#include <cstdint>
 
 // Layer class Declaration ----------------------------------------------------
 

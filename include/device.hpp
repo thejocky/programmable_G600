@@ -4,6 +4,7 @@
 #include <map>
 #include <linux/input.h>
 #include <linux/input-event-codes.h>
+#include <cstdint>
 
 class EventMap {
     template<typename KEY, typename T>

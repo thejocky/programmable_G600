@@ -5,6 +5,7 @@
 #include <iostream>
 #include <exception>
 
+
 void EventMap::loadEvent(size_t event, uint16_t type) {
     if (!event) throw;
     map[type].event = event;
